@@ -17,7 +17,7 @@ gcloud dataproc clusters create ${CLUSTER_NAME} \
 4. Wrzuć plik .zip korzystając z terminalu
 5. Rozpakuj plik i dodaj prawa
 ```
-unzip zestaw6Flink.zip
+unzip projekt2.zip
 chmod +x *.sh
 ```
 6. Zmień plik env.sh żeby odpowiadał twoim danym
