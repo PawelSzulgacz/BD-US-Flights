@@ -7,29 +7,29 @@ import com.example.bigdata.tools.FlightStatsAggregator;
 import com.example.bigdata.tools.FlightStatsProcessWindowFunction;
 import com.example.bigdata.windows.EveryEventTimeTrigger;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
-import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.streaming.api.windowing.triggers.EventTimeTrigger;
 
 import java.time.Duration;
 
 public class FlightDataAnalysis {
     public static void main(String[] args) throws Exception {
+        System.out.println("Starting Job");
 
         //ParameterTool propertiesFromFile = ParameterTool.fromPropertiesFile("src/main/resources/flink.properties");
         //ParameterTool propertiesFromArgs = ParameterTool.fromArgs(args);
         //ParameterTool properties = propertiesFromFile.mergeWith(propertiesFromArgs);
         ParameterTool properties = ParameterTool.fromArgs(args);
+        System.out.println("Properties");
+        properties.toMap().forEach((k, v) -> System.out.println(k + ": " + v));
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         env.getConfig().setRestartStrategy(RestartStrategies.fixedDelayRestart(3, 10000));
@@ -37,8 +37,10 @@ public class FlightDataAnalysis {
         env.getCheckpointConfig().setCheckpointTimeout(60000);
 
         DataStreamSource<FlightEvent> FlightEventDS = env.fromSource(Connectors.getFlightSource(properties), WatermarkStrategy.noWatermarks(), "Flight Source");
+        System.out.println("Connected");
 
-        /*DataStream<String> inputStream = env.
+        /*
+        DataStream<String> inputStream = env.
                fromSource(Connectors.getFileSource(properties),
                         WatermarkStrategy.noWatermarks(), "FlightData");
 
@@ -75,7 +77,7 @@ public class FlightDataAnalysis {
                     public Tuple2<String, String> getKey(FlightLocEvent event) throws Exception {
                         return new Tuple2<>(event.getState(), event.getKeyDay());
                     }
-                })// Assuming getDate() returns a formatted date string
+                })
                 .window(TumblingEventTimeWindows.of(Time.hours(24)))
                 .trigger(EveryEventTimeTrigger.create())
                 .aggregate(new FlightStatsAggregator(), new FlightStatsProcessWindowFunction());

@@ -20,8 +20,6 @@ public class FlightStatsProcessWindowFunction extends ProcessWindowFunction<Flig
             stats.getSumDelayDepartures(),
             stats.getSumDelayArrivals()
         );
-
         out.collect(result);
     }
-
 }

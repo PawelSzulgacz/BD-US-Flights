@@ -24,12 +24,16 @@ public class FlightEventDeserializationSchema implements KafkaRecordDeserializat
             ""
     };
 
-    private static Date parseDate(String dateStr) throws ParseException {
+    private static Date parseDate(String dateStr){
         if (dateStr.equals("\"\"")){
             return null;
         }
         for (String format : DATE_FORMATS) {
-            return new SimpleDateFormat(format).parse(dateStr);
+            try {
+                return new SimpleDateFormat(format).parse(dateStr);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
@@ -52,29 +56,13 @@ public class FlightEventDeserializationSchema implements KafkaRecordDeserializat
         FlightEvent event = new FlightEvent();
         event.setStartAirport(parts[3]);
         event.setDestAirport(parts[4]);
-        try {
-            event.setScheduledDepartureTime(parseDate(parts[5]));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            event.setScheduledArrivalTime(parseDate(parts[6]));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            event.setDepartureTime(parseDate(parts[7]));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        event.setScheduledDepartureTime(parseDate(parts[5]));
+        event.setScheduledArrivalTime(parseDate(parts[6]));
+        event.setDepartureTime(parseDate(parts[7]));
         event.setScheduledFlightTime(parseInt(parts[8]));
         event.setTaxiOut(parseInt(parts[9]));
         event.setTaxiIn(parseInt(parts[10]));
-        try {
-            event.setArrivalTime(parseDate(parts[11]));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        event.setArrivalTime(parseDate(parts[11]));
         out.collect(event);
     }
 

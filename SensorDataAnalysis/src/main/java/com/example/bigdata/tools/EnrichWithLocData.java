@@ -45,20 +45,17 @@ public class EnrichWithLocData extends RichMapFunction<FlightEvent, FlightLocEve
     @Override
     public FlightLocEvent map(FlightEvent FlightEvent) throws Exception {
         SimpleDateFormat dayFormat = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         String type = FlightEvent.getInfoType();
+        String IATAStart = FlightEvent.getStartAirport();
+        String IATALand = FlightEvent.getDestAirport();
+        LocData locDataStart = locDataMap.get(IATAStart);
+        LocData locDataLand = locDataMap.get(IATALand);
+        String stateStart = (locDataStart != null) ? locDataStart.getState() : "Unknown";
+        String stateLand = (locDataLand != null) ? locDataLand.getState() : "Unknown";
+        Integer TimezoneStart = (locDataStart != null) ? locDataStart.getTimezone() : Integer.valueOf(0);
+        Integer TimezoneLand = (locDataLand != null) ? locDataLand.getTimezone() : Integer.valueOf(0);
         if(type.equals("D"))
         {
-            String IATAStart = FlightEvent.getStartAirport();
-            String IATALand = FlightEvent.getDestAirport();
-            LocData locDataStart = locDataMap.get(IATAStart);
-            LocData locDataLand = locDataMap.get(IATALand);
-            //System.out.println(locData);
-            String stateStart = (locDataStart != null) ? locDataStart.getState() : "Unknown";
-            String stateLand = (locDataLand != null) ? locDataLand.getState() : "Unknown";
-            Integer TimezoneStart = (locDataStart != null) ? locDataStart.getTimezone() : Integer.valueOf(0);
-            Integer TimezoneLand = (locDataLand != null) ? locDataLand.getTimezone() : Integer.valueOf(0);
-            //String IATA, Date startTime, Date landTime, Date estimatedLandTime, Integer delay, String type, String state
             //estlandtime - wylot + czas lotu + taxiout
             Date estLandTime = addTimezone(FlightEvent.getDepartureTime(), TimezoneStart);
             estLandTime = addMinutes(estLandTime, FlightEvent.getScheduledFlightTime() + FlightEvent.getTaxiOut());
@@ -67,7 +64,6 @@ public class EnrichWithLocData extends RichMapFunction<FlightEvent, FlightLocEve
             Date departureTime = addTimezone(FlightEvent.getDepartureTime(), TimezoneStart);
             Integer delay = Math.toIntExact((scheduledDepartueTime.getTime() - departureTime.getTime()) / (60 * 1000)) + FlightEvent.getTaxiOut();
             delay = Math.max(delay, 0);
-
             String KeyDay = dayFormat.format(departureTime);
             return new FlightLocEvent(
                 IATAStart,
@@ -82,21 +78,10 @@ public class EnrichWithLocData extends RichMapFunction<FlightEvent, FlightLocEve
                 stateLand,
                 FlightEvent.getOrderColumn()
             );
-
         }
         else if(type.equals("A"))
         {
-
-            String IATAStart = FlightEvent.getStartAirport();
-            String IATALand = FlightEvent.getDestAirport();
-            LocData locDataStart = locDataMap.get(IATAStart);
-            LocData locDataLand = locDataMap.get(IATALand);
-
-            String stateStart = (locDataStart != null) ? locDataStart.getState() : "Unknown";
-            String stateLand = (locDataLand != null) ? locDataLand.getState() : "Unknown";
-            Integer TimezoneStart = (locDataStart != null) ? locDataStart.getTimezone() : Integer.valueOf(0);
-            Integer TimezoneLand = (locDataLand != null) ? locDataLand.getTimezone() : Integer.valueOf(0);
-            //String IATA, Date startTime, Date landTime, Date estimatedLandTime, Integer delay, String type, String state
+            //delay - arrival time + taxiIn
             Date arrivalTime = FlightEvent.getArrivalTime();
             if(arrivalTime == null)
             {
@@ -154,7 +139,6 @@ public class EnrichWithLocData extends RichMapFunction<FlightEvent, FlightLocEve
                     headerSkipped = true;
                     continue;
                 }
-
                 String[] parts = line.split(",");
                 if (parts.length == 14) {
                     String IATA = parts[4];
