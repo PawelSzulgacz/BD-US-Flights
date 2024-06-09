@@ -125,6 +125,12 @@ Następnie używane do obliczeń (przykład dla zdarzenia oznaczającego przylot
                 FlightEvent.getOrderColumn()
             );
 ```
+Ostateczny format wygląda następująco
+```
+7> FlightLocEvent{IATAStart='DTW', IATALand='SEA', startTime=Sun Jan 04 16:21:00 CET 2015, landTime=Sun Jan 04 13:47:00 CET 2015, estimatedLandTime=Sun Jan 04 22:15:00 CET 2015, KeyDay=04-01-2015, Delay=0, Type='D', StateStart='MI', StateLand='WA', Timestamp=Sun Jan 04 21:21:00 CET 2015}
+5> FlightLocEvent{IATAStart='BOS', IATALand='MCO', startTime=Thu Jan 01 04:04:00 CET 2015, landTime=Thu Jan 01 07:14:00 CET 2015, estimatedLandTime=Thu Jan 01 07:14:00 CET 2015, KeyDay=01-01-2015, Delay=31, Type='A', StateStart='MA', StateLand='FL', Timestamp=Thu Jan 01 12:14:00 CET 2015}
+```
+
 Dane te następnie są agregowane i grupowane według stanu ameryki i dnia
 ```java
        DataStream<FlightStatsResult> FlightStatsDS = enrichedFlightLocEventDS
