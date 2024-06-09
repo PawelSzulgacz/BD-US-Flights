@@ -1,0 +1,13 @@
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\windows\EveryEventTimeTrigger.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\tools\EnrichWithLocData.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\model\FlightStats.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\tools\FlightStatsAggregator.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\model\FlightLocEvent.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\FlightDataAnalysis.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\tools\FlightStatsProcessWindowFunction.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\connectors\FlightEventDeserializationSchema.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\model\FlightStatsResult.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\model\LocData.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\model\FlightEvent.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\model\FlightStatsAccumulator.java
+C:\magisterka\bigdata2\projekt2\flink_projekt\SensorDataAnalysis\src\main\java\com\example\bigdata\connectors\Connectors.java
