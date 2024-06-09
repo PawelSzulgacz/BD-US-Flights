@@ -135,7 +135,7 @@ Dane te następnie są agregowane i grupowane według stanu ameryki i dnia
                     }
                 })
                 .window(TumblingEventTimeWindows.of(Time.hours(24)))
-                .trigger(EveryEventTimeTrigger.create())
+                .trigger(trigger)
                 .aggregate(new FlightStatsAggregator(), new FlightStatsProcessWindowFunction());
 ```
 `FlightStatsAggregator` Zawiera logikę, wykorzystywane podczas wyliczania statystyk dla każdej drużyny
@@ -170,7 +170,21 @@ public class FlightStatsProcessWindowFunction extends ProcessWindowFunction<Flig
     }
 }
 ```
+# Utrzymanie obrazu czasu rzeczywistego - tryb A
+W celu obsługi tego trybu został zaimplementowany wyzwalacz, który zwraca wartość za każdym razem gdy do okna dodawany jest nowy element. 
+Został zaimplementowany w klasie `EveryElementTrigger` rozszerzający klasę `Trigger`.
+```java
+    @Override
+    public TriggerResult onElement(Object element, long timestamp, TimeWindow window, TriggerContext ctx) {
+        return TriggerResult.FIRE;
+    }
+```
+# Utrzymanie obrazu czasu rzeczywistego - tryb C
+Ten tryb obsługuje domyślny dla okien `EventTimeTrigger`.
+
 # Konsument: skrypt odczytujący wyniki przetwarzania
+Tryby mogą być zmieniane za pomocą zmiany elementu `DELAY` w pliku `env.sh`.
+
 Uruchom przetwarzanie i odczytywanie wyników
 ```
 ./run.sh
